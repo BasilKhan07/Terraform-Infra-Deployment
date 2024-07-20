@@ -37,11 +37,11 @@ jobs:
       run: terraform fmt 
 
     - name: Terraform Plan
-      run: terraform plan 
+      run: terraform plan -out=plan.tfplan
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/"main"' && github.event_name == 'push'
-      run: terraform apply --auto-approve 
+      run: terraform apply --auto-approve plan.tfplan 
 
     - name: Notify Plan Failure
       if: failure()
