@@ -30,11 +30,11 @@ jobs:
     - name: Terraform Init
       run: terraform init
 
-    # - name: Terraform Format
-    #   run: terraform fmt 
+    - name: Terraform Format
+      run: terraform fmt 
 
-    # - name: Terraform Plan
-    #   run: terraform plan -out=plan.tfplan
+    - name: Terraform Plan
+      run: terraform plan -out=plan.tfplan
 
     # - name: Terraform Apply
     #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -53,7 +53,7 @@ jobs:
     #   run: |
     #     echo -e "Terraform Apply Failed\n\nTerraform Apply failed"
 
-    # - name: Notify Success
-    #   if: success()
-    #   run: |
-    #     echo -e "Terraform Apply Succeeded\n\nTerraform Apply succeeded"
+    - name: Notify Success
+      if: success()
+      run: |
+        echo -e "Terraform Apply Succeeded\n\nTerraform Apply succeeded"
