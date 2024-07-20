@@ -4,15 +4,11 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
-
+  
 env:
   TF_VAR_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
   TF_VAR_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   EMAIL: ${{ secrets.EMAIL }}
-  SMTP_SERVER: ${{ secrets.SMTP_SERVER }}
-  SMTP_PORT: ${{ secrets.SMTP_PORT }}
-  SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
-  SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
 
 jobs:
   terraform:
@@ -20,67 +16,44 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
 
+    defaults:
+      run:
+        shell: bash
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+    # - name: Checkout
+    #   uses: actions/checkout@v4
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
+    # - name: Setup Terraform
+    #   uses: hashicorp/setup-terraform@v1
 
-    - name: Install swaks
-      run: sudo apt-get install -y swaks
+    # - name: Terraform Init
+    #   run: terraform init
 
-    - name: Terraform Init
-      run: terraform init
+    # - name: Terraform Format
+    #   run: terraform fmt 
 
-    - name: Terraform Format
-      run: terraform fmt 
+    # - name: Terraform Plan
+    #   run: terraform plan -out=plan.tfplan
 
-    - name: Terraform Plan
-      run: terraform plan -out=plan.tfplan
-
-    - name: Terraform Apply
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: terraform apply -auto-approve "plan.tfplan"
+    # - name: Terraform Apply
+    #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    #   run: terraform apply -auto-approve "plan.tfplan"  
 
     - name: Terraform Destroy
-      run: terraform destroy -auto-approve
+      run: terraform destroy
 
     - name: Notify Plan Failure
       if: failure()
       run: |
-        swaks --to ${{ secrets.EMAIL }} \
-              --from ${{ secrets.SMTP_USERNAME }} \
-              --server ${{ secrets.SMTP_SERVER }} \
-              --port ${{ secrets.SMTP_PORT }} \
-              --auth LOGIN \
-              --auth-user ${{ secrets.SMTP_USERNAME }} \
-              --auth-password ${{ secrets.SMTP_PASSWORD }} \
-              --header "Subject: Terraform Plan Failed" \
-              --body "Terraform Plan failed. Check the logs for details."
+        echo -e "Terraform Plan Failed\n\nTerraform Plan failed" 
 
     - name: Notify Apply Failure
       if: failure()
       run: |
-        swaks --to ${{ secrets.EMAIL }} \
-              --from ${{ secrets.SMTP_USERNAME }} \
-              --server ${{ secrets.SMTP_SERVER }} \
-              --port ${{ secrets.SMTP_PORT }} \
-              --auth LOGIN \
-              --auth-user ${{ secrets.SMTP_USERNAME }} \
-              --auth-password ${{ secrets.SMTP_PASSWORD }} \
-              --header "Subject: Terraform Apply Failed" \
-              --body "Terraform Apply failed. Check the logs for details."
+        echo -e "Terraform Apply Failed\n\nTerraform Apply failed"
 
     - name: Notify Success
       if: success()
       run: |
-        swaks --to ${{ secrets.EMAIL }} \
-              --from ${{ secrets.SMTP_USERNAME }} \
-              --server ${{ secrets.SMTP_SERVER }} \
-              --port ${{ secrets.SMTP_PORT }} \
-              --auth LOGIN \
-              --auth-user ${{ secrets.SMTP_USERNAME }} \
-              --auth-password ${{ secrets.SMTP_PASSWORD }} \
-              --header "Subject: Terraform Apply Succeeded" \
-              --body "Terraform Apply succeeded. Check the logs for details."
+        echo -e "Terraform Apply Succeeded\n\nTerraform Apply succeeded"
