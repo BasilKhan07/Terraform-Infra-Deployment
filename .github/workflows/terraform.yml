@@ -21,14 +21,14 @@ jobs:
         shell: bash
 
     steps:
-    # - name: Checkout
-    #   uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v4
 
-    # - name: Setup Terraform
-    #   uses: hashicorp/setup-terraform@v1
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
 
-    # - name: Terraform Init
-    #   run: terraform init
+    - name: Terraform Init
+      run: terraform init
 
     # - name: Terraform Format
     #   run: terraform fmt 
@@ -43,17 +43,17 @@ jobs:
     - name: Terraform Destroy
       run: terraform destroy
 
-    - name: Notify Plan Failure
-      if: failure()
-      run: |
-        echo -e "Terraform Plan Failed\n\nTerraform Plan failed" 
+    # - name: Notify Plan Failure
+    #   if: failure()
+    #   run: |
+    #     echo -e "Terraform Plan Failed\n\nTerraform Plan failed" 
 
-    - name: Notify Apply Failure
-      if: failure()
-      run: |
-        echo -e "Terraform Apply Failed\n\nTerraform Apply failed"
+    # - name: Notify Apply Failure
+    #   if: failure()
+    #   run: |
+    #     echo -e "Terraform Apply Failed\n\nTerraform Apply failed"
 
-    - name: Notify Success
-      if: success()
-      run: |
-        echo -e "Terraform Apply Succeeded\n\nTerraform Apply succeeded"
+    # - name: Notify Success
+    #   if: success()
+    #   run: |
+    #     echo -e "Terraform Apply Succeeded\n\nTerraform Apply succeeded"
