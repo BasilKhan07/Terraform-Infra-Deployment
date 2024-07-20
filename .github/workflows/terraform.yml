@@ -56,17 +56,17 @@ jobs:
       if: github.ref == 'refs/heads/"main"' && github.event_name == 'push'
       run: terraform apply -auto-approve -input=false
 
-    - name: Check for errors in Plan
+    - name: Notify Plan Failure
       if: failure()
       run: |
-        echo "Terraform Plan failed" | mail -s "Terraform Plan Failed" sendmail ${{ secrets.EMAIL }}
+        echo -e "Subject: Terraform Plan Failed\n\nTerraform Plan failed" | sendmail ${{ secrets.EMAIL }}
 
-    - name: Check for errors in Apply
+    - name: Notify Apply Failure
       if: failure()
       run: |
-        echo "Terraform Apply failed" | mail -s "Terraform Apply Failed" sendmail ${{ secrets.EMAIL }}
+        echo -e "Subject: Terraform Apply Failed\n\nTerraform Apply failed" | sendmail ${{ secrets.EMAIL }}
 
-    - name: Notify success
+    - name: Notify Success
       if: success()
       run: |
-        echo "Terraform Apply succeeded" | mail -s "Terraform Apply Succeeded" sendmail ${{ secrets.EMAIL }}
+        echo -e "Subject: Terraform Apply Succeeded\n\nTerraform Apply succeeded" | sendmail ${{ secrets.EMAIL }}
