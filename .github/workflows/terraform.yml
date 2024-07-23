@@ -49,4 +49,4 @@ jobs:
 
     - name: Notify Success
       if: success()
-      run: echo -e "Terraform Apply Succeeded"
+      run: echo -e "Terraform Apply Succeed"
